@@ -59,6 +59,7 @@ class Canje(db.Model):
     nombre_cliente = db.Column(db.String)
     total_puntos = db.Column(db.Float)
     cantidad_total = db.Column(db.Float)
+    producto_id = db.Column(db.Integer, db.ForeignKey('productos.id'), nullable = False)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable = False)
     productos = db.relationship('DetalleCanje')
     
@@ -89,41 +90,7 @@ class Canje(db.Model):
     def __repre__(self):
         return json.dumps(self.format())
 
-class DetalleCanje(db.Model):
-    __tablename__ = "detalle_canje"
-    id = db.Column(db.Integer, primary_key = True)
-    canje_id = db.Column(db.Integer, db.ForeignKey('canjes.id'))
-    producto_id = db.Column(db.Integer, db.ForeignKey('productos.id'))
-    numero_semana = db.Column(db.String, nullable = False, default =datetime.now().strftime("%W"))
-    mes = db.Column(db.String, nullable = False, default =datetime.now().strftime("%m"))
-    año = db.Column(db.String, nullable = False, default =datetime.now().strftime("%Y"))
-    puntos = db.Column( db.Float)
-    cantidad = db.Column(db.Float)
-    codigo_id = db.Column(db.Integer, db.ForeignKey('codigos.id'))
-    detalle = db.relationship('Producto')
-    def format(self):
-        return {
-                'id': self.id,
-                'ecopuntos': self.ecopuntos,
-            
-        }
-    
-    def insert(self):
-        db.session.add(self)
-        db.session.commit()
 
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-    
-    def update(self):
-        db.session.commit()
-    
-    def rollback():
-        db.session.rollback()
-    
-    def __repre__(self):
-        return json.dumps(self.format())
 
 class Producto(db.Model):
     __tablename__ = 'productos'
