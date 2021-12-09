@@ -26,7 +26,7 @@ def index():
 
 @app.route('/login', methods=['POST'])
 def login():
-    error = 'd'
+    error = False
     response = {}
     data = request.data
     data_dictionary = json.loads(data)
@@ -40,7 +40,6 @@ def login():
                 'usuario': usuario.format()
             }
         else:
-            error = True
             response = {
                 'succes': False,
                 'mensaje': "Hubo un error al loguear, intenta de nuevo"
@@ -50,7 +49,7 @@ def login():
         print(sys.exc_info())
     
     if error:
-        abort(402)
+        abort(404)
     else:
         return jsonify(response)
 
@@ -83,7 +82,7 @@ def crear_usuario():
                         })
     else:
         try: 
-            usuario = Usuario(usuario = usuario, contraseña = contraseña, \
+            usuario = Usuarios(usuario = usuario, contraseña = contraseña, \
                                cedula = cedula, nombre = nombre, apellido = apellido, \
                                correo = correo, telefono = telefono )
             usuario.insert()
@@ -182,7 +181,7 @@ def game_over():
         usuario = Usuarios.query.filter(Usuarios.id == usuario_id).first()
         usuario.puntos += puntos 
 
-        usuario.update
+        usuario.update()
     
     except:
         error = True

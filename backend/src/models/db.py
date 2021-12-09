@@ -26,7 +26,7 @@ class Usuarios(db.Model):
     def format(self):
         return {
                 'id': self.id,
-                'nombre': self.nombre,
+                'nombre': f'{self.nombre} {self.apellido}',
                 'correo': self.correo,
                 'puntos': self.puntos,
                 'fecha': self.fecha_registro.strftime("%m/%d/%Y, %H:%M:%S")
@@ -61,7 +61,6 @@ class Canje(db.Model):
     cantidad_total = db.Column(db.Float)
     producto_id = db.Column(db.Integer, db.ForeignKey('productos.id'), nullable = False)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable = False)
-    productos = db.relationship('DetalleCanje')
     
 
     def format(self):
@@ -107,15 +106,31 @@ class Producto(db.Model):
         return {
                 'id': self.id,
                 'nombre': self.nombre,
-                'ecopuntos': self.ecopuntos,
-                'tipo_material_id': self.tipo_producto_id,
+                'puntos': self.puntos,
                 'stock': self.stock_sin_despachar,
-                'foto': self.foto.decode('utf-8'),
+                'foto': self.foto,
         }
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+    
+    def update(self):
+        db.session.commit()
+    
+    def rollback():
+        db.session.rollback()
+    
+    def __repre__(self):
+        return json.dumps(self.format())
 
 class Codigos(db.Model):
     __tablename__ = "codigos"
     id = db.Column(db.Integer, primary_key = True)
+    fecha_registro = db.Column(db.DateTime(timezone=True), server_default=func.now())
     token = db.Column(db.String)
     canjeado = db.Column(db.Boolean, default=False, nullable=False)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable = False)
