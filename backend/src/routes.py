@@ -29,8 +29,8 @@ def login():
     error = False
     response = {}
     data = request.data
-    data_dictionary = json.loads(data)
     print(data)
+    data_dictionary = json.loads(data)
     print(data_dictionary)
     try:
         usuario = Usuarios.query.filter(Usuarios.usuario == data_dictionary["usuario"]).first()
@@ -59,8 +59,8 @@ def login():
 def crear_usuario():
     error = False
     data = request.data
-    data_dictionary = json.loads(data)
     print(data)
+    data_dictionary = json.loads(data)
     print(data_dictionary)
     cedula = data_dictionary["cedula"]
     nombre = data_dictionary["nombre"]
@@ -107,8 +107,8 @@ def crear_usuario():
 def crear_canje():
     error = False
     data = request.data
-    data_dictionary = json.loads(data)
     print(data)
+    data_dictionary = json.loads(data)
     print(data_dictionary)
     usuario_id = data_dictionary['usuario_id']
     total_puntos = data_dictionary['total_puntos']
@@ -179,8 +179,8 @@ def get_productos():
 def game_over():
     error = False
     data = request.data
-    data_dictionary = json.loads(data)
     print(data)
+    data_dictionary = json.loads(data)
     print(data_dictionary)
     usuario_id = data_dictionary["usuario_id"]
     puntos = data_dictionary["puntos"]
