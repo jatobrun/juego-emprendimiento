@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: piloto
+  labels:
+    service: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: backend
+  template:
+    metadata:
+      labels:
+        service: backend
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: backend
+          image: backend_app
+          env:
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: backend-credentials
+                key: DB_PASS
+          imagePullPolicy: Always 
+          ports:
+          - containerPort: 5000    
+        - name: cloud-sql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.17
+          command:
+            - "/cloud_sql_proxy"
+            - "-instances=inductive-album-334619:us-central1:emprendimiento=tcp:5432"
+            - "-credential_file=/secrets/key.json"
+          securityContext:
+            runAsNonRoot: true
+          volumeMounts:
+          - name: cloudsql-instance-credentials
+            mountPath: /secrets/
+            readOnly: true
+          resources:
+            requests:
+              memory: "0.5Gi"
+              cpu:    "100m"
+      volumes:
+      - name: cloudsql-instance-credentials
+        secret:
+          secretName: cloudsql-instance-credentials
+          
