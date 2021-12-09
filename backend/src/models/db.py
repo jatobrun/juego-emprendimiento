@@ -131,13 +131,10 @@ class Producto(db.Model):
     nombre = db.Column(db.String, nullable = False)
     detalle = db.Column(db.String)
     codigo = db.Column(db.String)
-    foto = db.Column(db.LargeBinary, nullable = False)
+    foto = db.Column(db.String, nullable = False)
     stock_sin_despachar = db.Column(db.Integer, nullable = False)
     stock_real = db.Column(db.Integer, nullable = False)
-    ecopuntos = db.Column(db.Float, nullable = False)
-    valor_max = db.Column(db.Float)
-    valor_min = db.Column(db.Float)
-    tipo_producto_id = db.Column(db.Integer, db.ForeignKey('tipoProductos.id'), nullable = False)
+    puntos = db.Column(db.Float, nullable = False)
 
     def format(self):
         return {
