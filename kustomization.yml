@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
 - deployment/launch/backend-deployment.yml
 - deployment/launch/backend-service.yml
-# - deployment/launch/frontend-deployment.yml
-# - deployment/launch/frontend-service.yml
+- deployment/launch/frontend-deployment.yml
+- deployment/launch/frontend-service.yml
 - deployment/launch/reverse-proxy-deployment.yml
 - deployment/launch/reverse-proxy-service.yml

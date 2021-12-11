@@ -52,16 +52,16 @@ jobs:
       run: |-
         docker push "gcr.io/$PROJECT_ID/$IMAGE_BACKEND:$GITHUB_SHA"
     
-    # - name: Build Frontend
-    #   run: |-
-    #     docker build --file=deployment/docker/frontend.dockerfile\
-    #       --tag "gcr.io/$PROJECT_ID/$IMAGE_FRONTEND:$GITHUB_SHA" \
-    #       --build-arg GITHUB_SHA="$GITHUB_SHA" \
-    #       --build-arg GITHUB_REF="$GITHUB_REF" \
-    #       .
-    # - name: Publish Frontend
-    #   run: |-
-    #     docker push "gcr.io/$PROJECT_ID/$IMAGE_FRONTEND:$GITHUB_SHA"
+    - name: Build Frontend
+      run: |-
+        docker build --file=deployment/docker/frontend.dockerfile\
+          --tag "gcr.io/$PROJECT_ID/$IMAGE_FRONTEND:$GITHUB_SHA" \
+          --build-arg GITHUB_SHA="$GITHUB_SHA" \
+          --build-arg GITHUB_REF="$GITHUB_REF" \
+          .
+    - name: Publish Frontend
+      run: |-
+        docker push "gcr.io/$PROJECT_ID/$IMAGE_FRONTEND:$GITHUB_SHA"
     
     - name: Build Proxy
       run: |-
@@ -84,7 +84,7 @@ jobs:
     # Deploy the Docker image to the GKE cluster
     - name: Deploy
       run: |-
-
+        ./kustomize edit set image frontend_app=gcr.io/$PROJECT_ID/$IMAGE_FRONTEND:$GITHUB_SHA
         ./kustomize edit set image backend_app=gcr.io/$PROJECT_ID/$IMAGE_BACKEND:$GITHUB_SHA
         ./kustomize edit set image reverse_proxy_app=gcr.io/$PROJECT_ID/$IMAGE_PROXY:$GITHUB_SHA
         ./kustomize build . | kubectl apply -f -
